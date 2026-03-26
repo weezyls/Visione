@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Üsi Visione — Ali & Lina</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Serif+Display:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #c19a6b;
+    --gold-light: #dcc5a0;
+    --gold-dark: #a07340;
+    --cream: #fffcf7;
+    --bg: #f5f0eb;
+    --text: #5a4e42;
+    --text-dark: #4a3f35;
+    --text-muted: #8a7b6b;
+    --text-light: #b0a090;
+    --border: rgba(193,154,107,0.25);
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(150deg, #f0e9e0 0%, #ebe3d8 50%, #e6ddd1 100%);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+
+  .app {
+    width: min(520px, 100%);
+    margin: 0 auto;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.6s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== CARD CONTAINER ===== */
+  .card {
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 40px 36px;
+    position: relative;
+    box-shadow: 0 12px 50px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.03);
+  }
+  @media (max-width: 480px) { .card { padding: 28px 20px; } }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent 5%, var(--gold) 25%, var(--gold-light) 50%, var(--gold) 75%, transparent 95%);
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  h1 {
+    font-family: 'Noto Serif Display', serif;
+    font-size: clamp(36px, 8vw, 48px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-family: 'Noto Serif Display', serif;
+    font-size: 14px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .intro {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.7;
+    margin-top: 20px;
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .div-line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .div-dia { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px 32px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--cream);
+    box-shadow: 0 4px 16px rgba(193,154,107,0.3);
+  }
+  .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(193,154,107,0.4); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--gold);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(193,154,107,0.05); }
+
+  .btn-name {
+    width: 100%;
+    padding: 18px;
+    font-size: 20px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-style: italic;
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    color: var(--text-dark);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .btn-name:hover {
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(193,154,107,0.15);
+    transform: translateY(-2px);
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-wrap {
+    margin-bottom: 28px;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 3px;
+    background: rgba(193,154,107,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-light), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  /* ===== BLOCK LABEL ===== */
+  .block-label {
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* ===== QUESTION ===== */
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(18px, 4.5vw, 22px);
+    font-weight: 400;
+    color: var(--text-dark);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .question-hint {
+    font-size: 14px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-dark);
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.3s;
+    line-height: 1.6;
+  }
+  textarea:focus { border-color: var(--gold); }
+  textarea::placeholder { color: var(--text-light); font-style: italic; }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+
+  .btn-row .btn { flex: 1; }
+
+  /* ===== CODE DISPLAY ===== */
+  .code-box {
+    width: 100%;
+    min-height: 80px;
+    padding: 14px;
+    font-family: monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    background: rgba(193,154,107,0.06);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    word-break: break-all;
+    line-height: 1.5;
+    margin: 12px 0;
+    resize: none;
+    outline: none;
+  }
+  .code-box:focus { border-color: var(--gold); }
+
+  .copy-hint {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--text-light);
+    text-align: center;
+    margin-top: 6px;
+  }
+
+  .status-msg {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold-dark);
+    margin-top: 10px;
+    min-height: 20px;
+  }
+
+  /* ===== REPORT ===== */
+  .report-question {
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+
+  .rq-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .rq-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-dark);
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+
+  .rq-answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 500px) { .rq-answers { grid-template-columns: 1fr; } }
+
+  .rq-answer {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--cream);
+  }
+
+  .rq-answer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .rq-answer-text {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .report-footer {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .rf-names {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .rf-date {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-light);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .center { text-align: center; }
+  .mt16 { margin-top: 16px; }
+  .mt24 { margin-top: 24px; }
+  .mb12 { margin-bottom: 12px; }
+  .gap12 { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: white; padding: 0; }
+    .card { box-shadow: none; padding: 20px; }
+    .card::before { display: none; }
+    .btn, .no-print { display: none !important; }
+    .rq-answers { grid-template-columns: 1fr 1fr !important; }
+    .report-question { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ========== SCREEN: WELCOME ========== -->
+  <div class="screen active" id="s-welcome">
+    <div class="card">
+      <h1>Üsi Visione</h1>
+      <div class="subtitle">Ali & Lina · 2026</div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <div class="intro">
+        12 Jahre zämä — und jitz wämer wüsse:<br>
+        <em>Wo göh mir hi? Was wünsche mir üs?</em><br><br>
+        Jede vo üs beantwortet 10 Frage — ohni z'wüsse was dr ander schribt. Am Schluss vergliche mir üsi Antworte und gseh, wo üsi Visione sich decke.
+      </div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <p class="center mb12" style="font-size:15px;color:var(--text-muted);font-style:italic;">Wer bisch du?</p>
+
+      <div class="gap12">
+        <button class="btn-name" onclick="startForm('Ali')">Ali</button>
+        <button class="btn-name" onclick="startForm('Lina')">Lina</button>
+      </div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <p class="center" style="font-size:14px;color:var(--text-light);">
+        Hesch scho en Code vo dim Partner?
+      </p>
+      <div class="center mt16">
+        <button class="btn btn-outline" onclick="showCodeEntry()">Code igeh</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: QUESTIONS ========== -->
+  <div class="screen" id="s-questions">
+    <div class="card">
+      <div class="progress-wrap">
+        <div class="progress-label" id="prog-label">Frag 1 vo 10</div>
+        <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:10%"></div></div>
+      </div>
+
+      <div class="block-label" id="block-label">Rückblick</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="question-hint" id="q-hint"></div>
+
+      <textarea id="q-answer" placeholder="Schrib dini Antwort..."></textarea>
+
+      <div class="btn-row">
+        <button class="btn btn-outline" id="btn-back" onclick="prevQ()">Zrugg</button>
+        <button class="btn btn-gold" id="btn-next" onclick="nextQ()">Witer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: DONE ========== -->
+  <div class="screen" id="s-done">
+    <div class="card">
+      <h2>Fertig!</h2>
+      <div class="subtitle" id="done-name"></div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <div class="intro">
+        Dini Antworte si gspeichert. Jitz bruchsch du de Code vo dim Partner, um de Report z'gseh.<br><br>
+        <strong>Schritt 1:</strong> Kopier dine Code und schick en dim Partner.<br>
+        <strong>Schritt 2:</strong> Gib de Code vo dim Partner unne i.
+      </div>
+
+      <p class="center mt24" style="font-size:13px;color:var(--text-muted);letter-spacing:1px;">DIN CODE</p>
+      <textarea class="code-box" id="my-code" readonly></textarea>
+      <div class="center">
+        <button class="btn btn-outline" onclick="copyCode()">Code kopiere</button>
+      </div>
+      <div class="status-msg" id="copy-msg"></div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <p class="center" style="font-size:13px;color:var(--text-muted);letter-spacing:1px;">CODE VO DIM PARTNER</p>
+      <textarea class="code-box" id="partner-code" placeholder="Füeg de Code vo dim Partner do i..."></textarea>
+      <div class="center">
+        <button class="btn btn-gold" onclick="generateReport()">Report erstelle</button>
+      </div>
+      <div class="status-msg" id="report-msg"></div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: CODE ENTRY (from welcome) ========== -->
+  <div class="screen" id="s-code-entry">
+    <div class="card">
+      <h2>Codes igeh</h2>
+      <div class="subtitle">Beidi Codes brucht's für de Report</div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <p class="center mb12" style="font-size:13px;color:var(--text-muted);letter-spacing:1px;">CODE VO ALI</p>
+      <textarea class="code-box" id="code-ali" placeholder="Ali's Code do iifüege..."></textarea>
+
+      <p class="center mb12 mt16" style="font-size:13px;color:var(--text-muted);letter-spacing:1px;">CODE VO LINA</p>
+      <textarea class="code-box" id="code-lina" placeholder="Lina's Code do iifüege..."></textarea>
+
+      <div class="center mt16">
+        <button class="btn btn-gold" onclick="generateFromBoth()">Report erstelle</button>
+      </div>
+      <div class="status-msg" id="entry-msg"></div>
+
+      <div class="center mt24">
+        <button class="btn btn-outline" onclick="goWelcome()">Zrugg</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== SCREEN: REPORT ========== -->
+  <div class="screen" id="s-report">
+    <div class="card">
+      <h1 style="font-size:32px;">Üsi Visione</h1>
+      <div class="subtitle">Ali & Lina · Verglich</div>
+
+      <div class="divider"><div class="div-line"></div><div class="div-dia"></div><div class="div-line"></div></div>
+
+      <div id="report-body"></div>
+
+      <div class="report-footer">
+        <div class="rf-names">Ali & Lina</div>
+        <div class="rf-date" id="report-date"></div>
+      </div>
+
+      <div class="center mt24 no-print">
+        <button class="btn btn-gold" onclick="window.print()">Als PDF speichere / Drucke</button>
+      </div>
+      <div class="center mt16 no-print">
+        <button class="btn btn-outline" onclick="goWelcome()">Zrugg zum Start</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    {
+      block: 'Rückblick',
+      q: 'Was isch dini schönschti gmeinsami Erinnerig us de letzte 12 Jahr?',
+      hint: 'Es Erläbnis, en Moment, es Gfüehl — öppis wo dir sofort i Sinn chunnt.'
+    },
+    {
+      block: 'Rückblick',
+      q: 'Was hesch i dere Zit über üs als Paar glernt?',
+      hint: 'Über eui Stärche, eui Art mitänand umzgah, oder über dich sälber i dr Beziehig.'
+    },
+    {
+      block: 'Gegenwart & Werte',
+      q: 'Was wünsche mir üs für de Ameo?',
+      hint: 'Weli Wert, Erfahrige und Möglichkeite söll er mitübercho? Wie stelle mir üs sini Chindheit vor?'
+    },
+    {
+      block: 'Gegenwart & Werte',
+      q: 'Was brucht üsi Beziehig, damit si starch blibt?',
+      hint: 'Ritual, Zit zwe, Kommunikation, gmeinsami Projäkt — was wünschisch dir vo üs als Paar?'
+    },
+    {
+      block: 'Gegenwart & Werte',
+      q: 'Was bedütet Gsundheit für dich und was machsch derfür?',
+      hint: 'Körperlichi und mentali Gsundheit — und wie unterstütze mir üs gägesiitig?'
+    },
+    {
+      block: 'Zukunft & Visione',
+      q: 'Wo und wie wohne mir i 5 Jahr?',
+      hint: 'Beschrib din ideale Wohnort, d\'Art vo Wohnig oder Hus, d\'Umgäbig.'
+    },
+    {
+      block: 'Zukunft & Visione',
+      q: 'Wie gseht dis berueflichi Lebe i 5 Jahr us?',
+      hint: 'Was machsch berueflech, wie viu schaffsch, und weli Rolle spilt Arbet i dim Lebe?'
+    },
+    {
+      block: 'Zukunft & Visione',
+      q: 'Wie göh mir mit Gäld und Finanze um?',
+      hint: 'Spare, Investiere, Eigetum — Sicherheit vs. Freiheit. Was isch üsi Strategie?'
+    },
+    {
+      block: 'Zukunft & Visione',
+      q: 'Weli Erläbnis und Reise wünschisch dir für üs als Familie?',
+      hint: 'Ört, Abentüür, Traditione — was söll Teil vo üsem Lebe wärde?'
+    },
+    {
+      block: 'Zukunft & Visione',
+      q: 'Wenn alles nach Plan lauft — wie fühlt sich üses Lebe i 10 Jahr a?',
+      hint: 'Mol es Bild: Wo si mir, was mache mir, wie fühlt es sich a? Beschrib en perfekte gwöhnliche Tag.'
+    }
+  ];
+
+  let currentUser = '';
+  let currentQ = 0;
+  let answers = [];
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goWelcome() { show('s-welcome'); }
+
+  function startForm(name) {
+    currentUser = name;
+    currentQ = 0;
+    answers = new Array(questions.length).fill('');
+    renderQ();
+    show('s-questions');
+  }
+
+  function renderQ() {
+    const q = questions[currentQ];
+    document.getElementById('prog-label').textContent = `Frag ${currentQ + 1} vo ${questions.length}`;
+    document.getElementById('prog-fill').style.width = ((currentQ + 1) / questions.length * 100) + '%';
+    document.getElementById('block-label').textContent = q.block;
+    document.getElementById('q-text').textContent = q.q;
+    document.getElementById('q-hint').textContent = q.hint;
+    document.getElementById('q-answer').value = answers[currentQ] || '';
+    document.getElementById('btn-back').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').textContent = currentQ === questions.length - 1 ? 'Abschliesse' : 'Witer';
+    document.getElementById('q-answer').focus();
+  }
+
+  function saveCurrentAnswer() {
+    answers[currentQ] = document.getElementById('q-answer').value.trim();
+  }
+
+  function nextQ() {
+    saveCurrentAnswer();
+    if (currentQ < questions.length - 1) {
+      currentQ++;
+      renderQ();
+    } else {
+      finishForm();
+    }
+  }
+
+  function prevQ() {
+    saveCurrentAnswer();
+    if (currentQ > 0) {
+      currentQ--;
+      renderQ();
+    }
+  }
+
+  function finishForm() {
+    const data = { name: currentUser, answers: answers, date: new Date().toISOString() };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    document.getElementById('done-name').textContent = `${currentUser}'s Antworte`;
+    document.getElementById('my-code').value = encoded;
+    show('s-done');
+  }
+
+  function copyCode() {
+    const box = document.getElementById('my-code');
+    box.select();
+    box.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(box.value).then(() => {
+      document.getElementById('copy-msg').textContent = 'Kopiert!';
+      setTimeout(() => document.getElementById('copy-msg').textContent = '', 2000);
+    }).catch(() => {
+      document.getElementById('copy-msg').textContent = 'Bitte manuell kopiere (Ctrl+C)';
+    });
+  }
+
+  function decodeData(code) {
+    try {
+      const json = decodeURIComponent(escape(atob(code.trim())));
+      const data = JSON.parse(json);
+      if (data.name && Array.isArray(data.answers)) return data;
+      return null;
+    } catch(e) { return null; }
+  }
+
+  function generateReport() {
+    const partnerCode = document.getElementById('partner-code').value.trim();
+    if (!partnerCode) {
+      document.getElementById('report-msg').textContent = 'Bitte gib de Code vo dim Partner i.';
+      return;
+    }
+    const myData = { name: currentUser, answers: answers };
+    const partnerData = decodeData(partnerCode);
+    if (!partnerData) {
+      document.getElementById('report-msg').textContent = 'De Code isch ungültig. Bitte prüef en.';
+      return;
+    }
+    buildReport(myData, partnerData);
+  }
+
+  function generateFromBoth() {
+    const codeAli = document.getElementById('code-ali').value.trim();
+    const codeLina = document.getElementById('code-lina').value.trim();
+    if (!codeAli || !codeLina) {
+      document.getElementById('entry-msg').textContent = 'Bitte beidi Codes igeh.';
+      return;
+    }
+    const dataAli = decodeData(codeAli);
+    const dataLina = decodeData(codeLina);
+    if (!dataAli) { document.getElementById('entry-msg').textContent = "Ali's Code isch ungültig."; return; }
+    if (!dataLina) { document.getElementById('entry-msg').textContent = "Lina's Code isch ungültig."; return; }
+    buildReport(dataAli, dataLina);
+  }
+
+  function buildReport(data1, data2) {
+    // Ensure Ali is left, Lina is right
+    let ali, lina;
+    if (data1.name === 'Ali') { ali = data1; lina = data2; }
+    else { ali = data2; lina = data1; }
+
+    const body = document.getElementById('report-body');
+    body.innerHTML = '';
+
+    questions.forEach((q, i) => {
+      const div = document.createElement('div');
+      div.className = 'report-question';
+      div.innerHTML = `
+        <div class="rq-number">Frag ${i + 1} · ${q.block}</div>
+        <div class="rq-title">${q.q}</div>
+        <div class="rq-answers">
+          <div class="rq-answer">
+            <div class="rq-answer-name">Ali</div>
+            <div class="rq-answer-text">${escHtml(ali.answers[i] || '—')}</div>
+          </div>
+          <div class="rq-answer">
+            <div class="rq-answer-name">Lina</div>
+            <div class="rq-answer-text">${escHtml(lina.answers[i] || '—')}</div>
+          </div>
+        </div>
+      `;
+      body.appendChild(div);
+    });
+
+    const now = new Date();
+    document.getElementById('report-date').textContent =
+      now.toLocaleDateString('de-CH', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    show('s-report');
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function showCodeEntry() {
+    show('s-code-entry');
+  }
+</script>
+</body>
+</html>
